@@ -52,12 +52,13 @@ export class ChallengesService {
         decryptedPath = `${prefix}${encryptedPath.replace(/[^0-9a-fA-F]/g, '')}`;
         break;
       case 3:
-        const asciiAmount =
-          parseInt(encryptedPath.replace(/[a-zA-Z\s]/g, '')) * -1;
-        console.log({ asciiAmount });
+        const asciiDifference =
+          parseInt(encryption_method.replace(/[a-zA-Z\s]/g, '')) * -1;
         const asciiDecrypt = encryptedPath
           .split('')
-          .map((char) => String.fromCharCode(char.charCodeAt(0) + asciiAmount))
+          .map((char) =>
+            String.fromCharCode(char.charCodeAt(0) + asciiDifference),
+          )
           .join('');
         decryptedPath = `${prefix}${asciiDecrypt}`;
         break;
@@ -73,7 +74,7 @@ export class ChallengesService {
       decryptedPath: decryptedPath,
     });
 
-    if (level < 3) {
+    if (level < 4) {
       // Assuming the final level is 3
       await this.solveChallenge(email, results, decryptedPath);
     }
