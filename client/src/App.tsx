@@ -1,6 +1,6 @@
-import { CardContent, CardHeader, CardTitle, Card } from "@/components/ui/card";
-import { useEffect, useState } from "react";
-import { decryptLink } from "@/lib/utils";
+import { CardContent, CardHeader, CardTitle, Card } from '@/components/ui/card';
+import { useEffect, useState } from 'react';
+import { decryptLink } from '@/lib/utils';
 
 interface ILinkCardProps {
   level: number;
@@ -55,7 +55,7 @@ export default function Component() {
   const [links, setLinks] = useState<ILinkCardProps[]>([]);
 
   useEffect(() => {
-    const getChallange = (path = "heitorsaldanha@gmail.com") => {
+    const getChallange = (path = 'heitorsaldanha@gmail.com') => {
       fetch(
         `https://cors-anywhere.herokuapp.com/https://ciphersprint.pulley.com/${path}`
       )
@@ -100,3 +100,4 @@ export default function Component() {
     </div>
   );
 }
+
