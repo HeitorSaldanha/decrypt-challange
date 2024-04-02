@@ -1,6 +1,11 @@
-import { CardContent, CardHeader, CardTitle, Card } from '@/components/ui/card';
-import { useEffect, useState } from 'react';
-import { decryptLink } from '@/lib/utils';
+import { CardContent, CardHeader, CardTitle, Card } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ILinkCardProps {
   level: number;
@@ -28,15 +33,42 @@ function LinkCard({
       </CardContent>
       <CardContent className="grid gap-1.5">
         <p className="text-sm font-medium">Encrypted Path</p>
-        <p className="text-sm">{encryptedPath}</p>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger className="truncate text-left">
+              <p className="text-sm truncate">{encryptedPath}</p>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{encryptedPath}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </CardContent>
       <CardContent className="grid gap-1.5">
         <p className="text-sm font-medium">Encrypt Method</p>
-        <p className="text-sm">{encryptMethod}</p>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger className="truncate text-left">
+              <p className="text-sm truncate">{encryptMethod}</p>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{encryptMethod}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </CardContent>
       <CardContent className="grid gap-1.5">
         <p className="text-sm font-medium">Decrypted Link</p>
-        <a>{`https://ciphersprint.pulley.com/${decryptedPath}`}</a>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger className="truncate text-left">
+              <p className="text-sm truncate">{`https://ciphersprint.pulley.com/${decryptedPath}`}</p>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{`https://ciphersprint.pulley.com/${decryptedPath}`}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </CardContent>
     </Card>
   );
@@ -55,41 +87,15 @@ export default function Component() {
   const [links, setLinks] = useState<ILinkCardProps[]>([]);
 
   useEffect(() => {
-    const getChallange = (path = 'heitorsaldanha@gmail.com') => {
-      fetch(
-        `https://cors-anywhere.herokuapp.com/https://ciphersprint.pulley.com/${path}`
-      )
-        .then((resp) => resp.json())
-        .then(
-          ({
-            level,
-            expires_in: expiration,
-            encrypted_path: encryptedPath,
-            encryption_method: encryptMethod,
-          }: ILink) => {
-            const decryptedPath = decryptLink({ encryptedPath, encryptMethod });
-            console.log({
-              level,
-              expiration,
-              encryptedPath,
-              encryptMethod,
-              decryptedPath,
-            });
-            setLinks((prev) => [
-              ...prev,
-              {
-                level,
-                expiration,
-                encryptedPath,
-                encryptMethod,
-                decryptedPath,
-              },
-            ]);
-            if (level < 3) getChallange(decryptedPath);
-          }
-        );
-    };
-    getChallange();
+    fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: "heitorsaldanha@gmail.com" }),
+    })
+      .then((resp) => resp.json())
+      .then((resp) => setLinks(resp));
   }, []);
 
   return (
@@ -100,4 +106,3 @@ export default function Component() {
     </div>
   );
 }
-
