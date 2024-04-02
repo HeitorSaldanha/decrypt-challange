@@ -52,9 +52,12 @@ export class ChallengesService {
         decryptedPath = `${prefix}${encryptedPath.replace(/[^0-9a-fA-F]/g, '')}`;
         break;
       case 3:
+        const asciiAmount =
+          parseInt(encryptedPath.replace(/[a-zA-Z\s]/g, '')) * -1;
+        console.log({ asciiAmount });
         const asciiDecrypt = encryptedPath
           .split('')
-          .map((char) => String.fromCharCode(char.charCodeAt(0) + 2))
+          .map((char) => String.fromCharCode(char.charCodeAt(0) + asciiAmount))
           .join('');
         decryptedPath = `${prefix}${asciiDecrypt}`;
         break;
